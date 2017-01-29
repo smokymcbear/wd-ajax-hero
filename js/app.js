@@ -57,4 +57,55 @@
   };
 
   // ADD YOUR CODE HERE
+
+
+
+  document.querySelector('button').addEventListener('click', function() {
+    event.preventDefault()
+    const value = document.getElementById('search').value;
+    const string = stringCleaning(value);
+
+    !string ? console.log("toast") : callApi(string)
+
+    console.log(movies)
+    renderMovies()
+
+
+  })
+
+
+
+  function stringCleaning(string) {
+    return string.split(' ').join("+");
+  }
+
+  function getRemoteJsonUrl(url) {
+    return fetch(url).then(function(prom) {
+      return prom.json();
+    })
+  }
+
+  function callApi(input) {
+    const api = `http://www.omdbapi.com/?s=${input}`;
+    getRemoteJsonUrl(api).then(function(obj) {
+      obj.Search.forEach(function(element) {
+        movies.push({id: element.imdbID, poster: element.Poster, title: element.Title, year: element.Year})
+      })
+    })
+    .catch(function(error) {
+      console.log("Error Error!")
+    })
+  }
+
+  // function domCreator(num) {
+  //   for (i = 0; i < num; i++) {
+  //     let div = document.createElement('div');
+  //     document.body.append(div)
+  //
+  //   }
+  // }
+
+
+
+
 })();
