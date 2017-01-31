@@ -69,6 +69,7 @@
 
     console.log(movies)
     renderMovies()
+    movies.splice(0, movies.length)
 
 
   })
@@ -88,8 +89,11 @@
   function callApi(input) {
     const api = `http://www.omdbapi.com/?s=${input}`;
     getRemoteJsonUrl(api).then(function(obj) {
-      obj.Search.forEach(function(element) {
-        movies.push({id: element.imdbID, poster: element.Poster, title: element.Title, year: element.Year})
+      Promise.all(obj.Search).then(function(array) {
+        array.forEach(function(element) {
+          movies.push({id: element.imdbID, poster: element.Poster, title: element.Title, year: element.Year})
+        })
+        renderMovies()
       })
     })
     .catch(function(error) {
